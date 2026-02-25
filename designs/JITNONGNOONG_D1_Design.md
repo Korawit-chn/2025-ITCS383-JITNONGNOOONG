@@ -458,6 +458,183 @@ flowchart LR
 ### Class Diagram
 
 ```mermaid
+classDiagram
+direction TB
+   class User {
+       <<Abstract>>
+       - firstName : String
+       - lastName : String
+       - email : String
+       - PasswordHashing : String
+       - Role : String
+       + getRole() String
+       + getFullName() String
+       + getEmail() String
+       + login()
+   }
 
+
+   class Admin {
+       - AdminId : int
+       + generateReport()
+   }
+
+
+   class Organization_Staff {
+       - staffId: int
+       + manageDogProfile()
+       + approveRequest()
+       + viewAdopterList()
+       + verifyAdopter(citizenId : String)
+       + checkform(AdoptionForm : adoptionform)
+       + recordTreatment()
+   }
+
+
+   class General_User {
+       - citizenId : Int
+       - userId : Int
+       - PhoneNum : string
+       + viewDogList()
+       + viewdogProfile(dogId)
+       + addToFavorite(dogId)
+       + submitAdoptionRequest(dogId)
+       + BookSchedule(dogId: int, selectedDate: DateTime)
+   }
+
+
+   class Eligible_sponsors {
+       - UserName : String
+       - sponsorId : int
+       + register()
+       + donateMoney()
+       + inputBanner()
+   }
+
+
+   class DeliverySchedule {
+       - appointmentDate : DateTime
+       - location : String
+       + confirmSchedule()
+   }
+
+
+   class FavoriteList {
+       - savedDogs : List
+       + addDog(Id)
+       + removeDog(Id)
+   }
+
+
+   class TreatmentRecord {
+       - treatmentId : int
+       - dogId : int
+       - treatmentDetail : String
+       - treatmentDate : Date
+       + addTreatment()
+       + updateTreatment()
+   }
+
+
+   class TrainingRecord {
+       - trainingId : int
+       - dogId : int
+       - trainingDetail : String
+       - trainingDate : Date
+       - LeashTrained : Boolean
+       - CrateTrained : Boolean
+       - FoodTrained : Boolean
+       - HouseTrained : Boolean
+       + addTraining()
+       + updateTraining()
+   }
+
+
+   class AdoptionForm {
+       - requestId : int
+       - requestDate : Date
+       - name : String
+       - email : String
+       - Phone : String
+       - Address : String
+       - livingType : String
+       - Message : String
+       + submitForm()
+       + getForm()
+   }
+
+
+   class CitizenProfileService {
+       <<Interface>>
+       +getThaiCitizenData(citizenId : String)
+   }
+
+
+   class VerificationService {
+       <<Interface>>
+       +getCriminalRecord(citizenId : String)
+       +getBlacklistRecord(citizenId : String)
+   }
+
+
+   class Dog {
+       - dogId : int
+       - name : String
+       - breed : String
+       - color : String
+       - age : int
+       - description : String
+       - dogimage : String
+       - personality : String
+       - medicalProfile : String
+       - trainingProfile : String
+       - status : DogStatus
+       + addDog()
+       + updateDogProfile()
+       + updateDogStatus()
+   }
+
+
+   class DogStatus {
+       <<enumeration>>
+       AVAILABLE
+       PENDING
+       ADOPTED
+   }
+
+
+
+
+
+
+   User <|-- Admin
+   User <|-- Organization_Staff
+   User <|-- General_User
+   User <|-- Eligible_sponsors
+
+
+   General_User "1" -- "*" AdoptionForm : "fills/submits"
+   General_User "1" -- "1" FavoriteList : "has"
+   General_User "1" -- "*" DeliverySchedule : "books"
+   AdoptionForm "1" -- "0..1" DeliverySchedule : "triggers"
+
+
+   Dog "1" -- "*" TreatmentRecord : "has"
+   Dog "1" -- "*" TrainingRecord : "has"
+   Dog "1" -- "*" AdoptionForm : "is requested by"
+
+
+   FavoriteList "1" -- "*" Dog : "contains"
+   DeliverySchedule "*" -- "1" Dog : "for"
+
+
+   Organization_Staff "1" -- "*" Dog : "manages"
+   Organization_Staff -- AdoptionForm : "reviews (checkform)"
+
+
+   Admin "1" -- "*" Dog : "monitors"
+   Dog -- DogStatus : "uses"
+   General_User -- CitizenProfileService : "verifies via"
+   Organization_Staff -- VerificationService : "verifies via"
 ```
 
