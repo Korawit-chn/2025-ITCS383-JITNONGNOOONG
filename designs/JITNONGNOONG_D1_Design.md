@@ -5,7 +5,7 @@
 
 **Explanation:** The design of this Context Diagram shows the big picture of the Dog Adoption System. It shows which and conceptually how actors and external systems interact with the system.
 
-![Context Diagram]([/diagrams/ContextDiagram.png](https://github.com/ICT-Mahidol/2025-ITCS383-JITNONGNOOONG/blob/master/designs/diagrams/ContextDiagram.png))
+![Context Diagram](https://github.com/ICT-Mahidol/2025-ITCS383-JITNONGNOOONG/blob/master/designs/diagrams/ContextDiagram.png)
 
 1. Requirements Alignment: The diagram addresses key stakeholders from the requirements and show who need and do what:
     - General Thai Users: Browse and View Dog list, Add the Dog to favorite list, and Make an Adoption
