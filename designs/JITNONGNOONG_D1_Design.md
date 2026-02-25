@@ -456,13 +456,15 @@ flowchart LR
 ```
 
 ### Class Diagram
-#### Explanation: 
-The class diagram is designed to handle the specific logic of a non-profit adoption workflow while maintaining system security. 
-- Accessibility & User Roles: The User abstract class ensures a unified login for all ages, while specific subclasses like General_User, Organization_Staff, and Admin provide the tailored interfaces required for their specific tasks .
-- Dog Profile & High-Res Content: The Dog class includes attributes for dogimage and medicalProfile. It links to TreatmentRecord and TrainingRecord to ensure dogs are only added to the "Available" list after completing their practicing/medical phases.
-- Verification Interface: The VerificationService and CitizenProfileService interfaces are designed to call the police criminal record and blacklist systems before an adoption is approved, satisfying the "enhancing security" requirement .
-- Post-Adoption Tracking: The relationship between AdoptionForm and Dog allows the system to log the "one-year check-up" data, satisfying the requirement to record monthly photos and updates.
-- Sponsor Management: The Eligible_sponsors class handles the unique requirement of a fixed banner size regardless of the donation amount.
+**Explanation:**
+The Class Diagram defines the Static View—how data is structured and how objects interact to satisfy business rules.
+- Requirement: Role-Based Access & Security
+  - Design Decision: The implementation of an abstract User class with specialized subclasses (General_User, Organization_Staff, Admin, Eligible_sponsors) ensures Encapsulation and Role-Based Access Control (RBAC) .
+  - Verification Interface: By using <<Interface>> for VerificationService and CitizenProfileService, the system supports the requirement for "enhanced security" by decoupling the core logic from external police and blacklist APIs .
+- Requirement: Dog Readiness & Medical History
+  - Design Decision: The Dog class is linked to TreatmentRecord and TrainingRecord. This ensures the "Dog practicing" and medical requirements are documented before the DogStatus is updated to AVAILABLE.
+- Requirement: Sponsor Management
+  - Design Decision: The Eligible_sponsors class handles the unique business rule: one fixed-size banner regardless of donation amount. This is enforced at the class level to maintain the "blue and white" UI consistency.
     
 ```mermaid
 classDiagram
