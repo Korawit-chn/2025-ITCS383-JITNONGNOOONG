@@ -54,3 +54,17 @@
 2. Design Decisions:
     - Role-Based UI: Different components are tailored to specific users, such as the Dog Profile Management for Organization Staff and Report Dashboard for Admin Staff.
     - System Boundary: The boundary is clearly separates that the Web UI component will be in HTML and will responsible only for user interaction and API calling.
+
+## Additional Diagram
+### Data Flow Diagram
+
+```mermaid
+
+```
+
+### Class Diagram
+
+```mermaid
+
+```
+
