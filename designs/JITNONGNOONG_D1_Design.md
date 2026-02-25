@@ -58,8 +58,54 @@
 ## Additional Diagram
 ### Data Flow Diagram
 
+#### Level 0
 ```mermaid
+flowchart LR
+  %% External Entities
+  U["General User(Thai only)"]
+  S[Organization Staff]
+  A[Admin]
+  SP[Sponsor]
 
+  %% System (single process)
+  P0(("P0: Adoption System"))
+
+  %% ACTOR
+  %%USER
+  U -->|"Password"| P0
+  U -->|"Email"| P0
+  U -->|"Adoption Request"| P0
+  U -->|"Delivery Date"| P0
+  U -->|"Image"| P0
+  U -->|"Info"| P0
+  P0 -->|"Status"| U
+
+%%STAFF
+  S -->|"Password"| P0
+  S -->|"Email"| P0
+  S -->|"Image"| P0
+  S -->|"General Info"| P0
+  S -->|"Traning Profile"| P0
+  S -->|"Medical Profile"| P0
+  S -->|"Personality"| P0
+  S -->|"Dog Status"| P0
+  S -->|"Visit record"| P0
+  P0 -->|"Visit record"| S
+  P0 --> |"Adoption Request"| S
+  P0 -->|"Dog Status"| S
+
+%%SPONSOR
+  SP -->|"Password"| P0
+  SP -->|"Email"| P0
+  SP -->|"Banner"| P0
+  SP -->|"Donation"| P0
+  P0 -->|"Status"| SP
+
+%%ADMIN
+  A -->|"Password"| P0
+  A -->|"Email"| P0
+  A -->|"Report Request"| P0
+  P0 -->|"Report"| A
 ```
 
 ### Class Diagram
