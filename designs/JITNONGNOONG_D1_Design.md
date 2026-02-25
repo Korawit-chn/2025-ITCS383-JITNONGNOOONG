@@ -7,8 +7,6 @@
 
 ![Context Diagram](/diagrams/ContextDiagram.png)
 
-<div style="page-break-after: always"></div>
-
 1. Requirements Alignment: The diagram addresses key stakeholders from the requirements and show who need and do what:
     - General Thai Users: Browse and View Dog list, Add the Dog to favorite list, and Make an Adoption
     - Organization Staff: Manage Dog and Adoption
