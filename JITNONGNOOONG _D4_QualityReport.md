@@ -2,7 +2,7 @@
 
 Screenshot: 
 
-![][Sonar_Evidences/Screenshot 2026-03-05 at 23.42.58.png]
+![][https://github.com/ICT-Mahidol/2025-ITCS383-JITNONGNOOONG/blob/master/Sonar_Evidences/Screenshot 2026-03-05 at 23.42.58.png]
 
 ![][image2]
 
