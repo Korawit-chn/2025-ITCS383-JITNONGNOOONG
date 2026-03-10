@@ -93,18 +93,10 @@ JITNONGNOONG/
 
 1. Open MySQL and run the schema + seed script:
 
-From project root:
-
-```bash
-mysql -u root -p < implementations/src/backend/dog_adoption_db.sql
-```
-
-This creates schema and seed data in `dog_adoption_db`.
-
 ### User Account and the Database dog_adoption_db Preparation in MySQL
 
 1. Open MySQL Workbench and connect to `Local instance 3306`.
-2. Run the SQL script to create a database `weglowdb`.
+2. Run the SQL script to create a database `dog_adoption_db`.
 3. Create a User Account in MySQL Server for the web server with:
 - Login Name: `dog_adoption`
 - Password: `dog_adoption`
@@ -131,12 +123,10 @@ cd implementations/src/backend
 # 2. Install dependencies
 npm install
 
-# 3. Edit .env → set DB_PASSWORD and SESSION_SECRET
-
-# 4. Start the server
+# 3. Start the server
 npm start
 
-#5. Run test
+# 4. Run test
 npm test
 ```
 
@@ -250,38 +240,6 @@ All seed accounts use the password: **`Password123!`**
 - **Frontend**: Vanilla HTML / CSS / JavaScript (no framework)
 
 ---
-
-## Workflow
-- port 9000 visibility => public
-- then sonar
-```bash
-docker pull sonarqube:community
-
-docker stop sonarqube 2>/dev/null || true
-docker rm sonarqube 2>/dev/null || true
-
-docker run -d --name sonarqube \
-  -p 9000:9000 \
-  -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \
-  sonarqube:community
-```
-- go to sonar
-    - Username: admin
-    - Password: admin
-- create project locally
-    - Project display name: JITNONGNOOONG1
-    - Project key: JITNONGNOOONG1
-    - branch: master
-- follow instance's default
-- with github actions
-- go to repo setting > secrets and variables
-- update SONAR_TOKEN with generated token
-- update SONAR_HOST_URL with new URL
-if there's an update:
-- git add .
-- git commit
-- git push
-
 
 *JITNONGNOONG v1.0 — D2 Functional Service Release*
 >>>>>>> main
