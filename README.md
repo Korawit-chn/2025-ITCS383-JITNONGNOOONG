@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-# 2025-ITCS383-JITNONGNOOONG
-=======
-# 🐾 JITNONGNOONG — ระบบรับเลี้ยงสุนัข (Dog Adoption System)
 
-ระบบจัดการรับเลี้ยงสุนัขออนไลน์สำหรับองค์กรสวัสดิภาพสัตว์ พัฒนาด้วย Node.js / Express และ MySQL
+# 2025-ITCS383-JITNONGNOOONG
+
+# 🐾 JITNONGNOONG — ระบบรับเลี้ยงสุนัข (Dog Adoption System)
 
 ---
 
@@ -98,8 +96,6 @@ JITNONGNOONG/
 From project root:
 
 ```bash
-mysql -u root -p < implementations/backend/dog_adoption_db.sql
-=======
 mysql -u root -p < implementations/src/backend/dog_adoption_db.sql
 ```
 
@@ -129,11 +125,8 @@ This creates schema and seed data in `dog_adoption_db`.
 ### 🔧 Backend Setup & Run
 
 ```bash
-# 1. Navigate to backend folder
-cd implementations/backend
-=======
 # 1. Navigate to implementations folder
-cd implementations/backend
+cd implementations/src/backend
 
 # 2. Install dependencies
 npm install
