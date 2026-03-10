@@ -83,10 +83,19 @@ JITNONGNOONG/
 | MySQL | ≥ 8.0 |
 
 ---
+## Option A: Download ZIP from GitHub and Run Locally
+### Download source as ZIP
 
-## 🗄️ Database Setup
+1. Open your GitHub repository page in browser.
+2. Click `Code`.
+3. Click `Download ZIP`.
+4. Extract ZIP to your local machine.
+
+### 🗄️ Database Setup
 
 1. Open MySQL and run the schema + seed script:
+
+From project root:
 
 ```bash
 mysql -u root -p < implementations/backend/dog_adoption_db.sql
@@ -94,18 +103,37 @@ mysql -u root -p < implementations/backend/dog_adoption_db.sql
 mysql -u root -p < implementations/src/backend/dog_adoption_db.sql
 ```
 
-This creates the `dog_adoption_db` database with all tables and sample data.
+This creates schema and seed data in `dog_adoption_db`.
+
+### User Account and the Database dog_adoption_db Preparation in MySQL
+
+1. Open MySQL Workbench and connect to `Local instance 3306`.
+2. Run the SQL script to create a database `weglowdb`.
+3. Create a User Account in MySQL Server for the web server with:
+- Login Name: `dog_adoption`
+- Password: `dog_adoption`
+- Authentication Type: `Standard`
+- Limit to Hosts: `localhost`
+4. Set Schema privileges for the `dog_adoption` database.
+5. Set access rights on `dog_adoption` including:
+- `SELECT`
+- `INSERT`
+- `UPDATE`
+- `DELETE`
+- `EXECUTE`
+- `SHOW VIEW`
+6. Test the `dog_adoption_db` database connection.
 
 ---
 
-## 🔧 Backend Setup & Run
+### 🔧 Backend Setup & Run
 
 ```bash
 # 1. Navigate to backend folder
 cd implementations/backend
 =======
 # 1. Navigate to implementations folder
-cd implementations
+cd implementations/backend
 
 # 2. Install dependencies
 npm install
@@ -114,6 +142,9 @@ npm install
 
 # 4. Start the server
 npm start
+
+#5. Run test
+npm test
 ```
 
 For development with auto-reload:
