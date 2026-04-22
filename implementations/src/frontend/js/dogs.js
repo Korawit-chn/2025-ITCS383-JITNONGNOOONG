@@ -22,7 +22,7 @@ async function init() {
     allDogs = [];
   }
 
-  // Populate filter dropdowns
+  // Populate filter dropdownss
   populateFilterOptions();
 
   // Perform initial search
