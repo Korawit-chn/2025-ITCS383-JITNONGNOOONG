@@ -156,7 +156,7 @@ function setSortButtonLabel(buttonId, text = 'ล่าสุด ↑↓') {
   if (btn) btn.textContent = text;
 }
 
-/* ── Notifications ── */
+/* ── Notifications ──  */
 async function initNotificationBell() {
   const navUser = document.querySelector('.nav__user');
   if (!navUser) return;
