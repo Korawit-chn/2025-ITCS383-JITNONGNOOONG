@@ -214,14 +214,44 @@ router.put('/:id', requireRole('STAFF', 'ADMIN'), uploadImage, async (req, res) 
   }
 });
 
-/* DELETE /api/dogs/:id  (ADMIN only) */
-router.delete('/:id', requireRole('ADMIN'), async (req, res) => {
+/* DELETE /api/dogs/:id  (STAFF / ADMIN only) */
+router.delete('/:id', requireRole('STAFF', 'ADMIN'), async (req, res) => {
+  let conn;
   try {
-    await db.execute('DELETE FROM dogs WHERE DogId = ?', [req.params.id]);
+    conn = await db.getConnection();
+    await conn.beginTransaction();
+
+    const dogId = req.params.id;
+
+    // Get adoption requests for this dog
+    const [reqs] = await conn.execute('SELECT AdoptionReqNo FROM adoption_requests WHERE DogId = ?', [dogId]);
+    const reqIds = reqs.map(r => r.AdoptionReqNo);
+
+    if (reqIds.length > 0) {
+      const placeholders = reqIds.map(() => '?').join(',');
+      
+      // Delete monthly_followups
+      await conn.execute(`DELETE FROM monthly_followups WHERE AdoptionReqNo IN (${placeholders})`, reqIds);
+      
+      // Delete delivery_schedules
+      await conn.execute(`DELETE FROM delivery_schedules WHERE AdoptionReqNo IN (${placeholders})`, reqIds);
+      
+      // Delete adoption_request_details (though it has ON DELETE CASCADE, let's be safe or just let it cascade when adoption_requests is deleted)
+      // Delete adoption_requests
+      await conn.execute(`DELETE FROM adoption_requests WHERE DogId = ?`, [dogId]);
+    }
+
+    // Delete the dog (favorites table has ON DELETE CASCADE so it will be handled automatically)
+    await conn.execute('DELETE FROM dogs WHERE DogId = ?', [dogId]);
+
+    await conn.commit();
     res.json({ message: 'ลบสุนัขสำเร็จ' });
   } catch (err) {
+    if (conn) await conn.rollback();
     console.error(err);
-    res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
+    res.status(500).json({ message: 'เกิดข้อผิดพลาดในการลบสุนัข' });
+  } finally {
+    if (conn) conn.release();
   }
 });
 
