@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const db = require('../config/db');
 const { requireRole } = require('../middleware/auth');
+const dogService = require('../services/dogService');
 
 /* Multer — store uploaded files in /frontend/img */
 const storage = multer.diskStorage({
@@ -34,6 +35,82 @@ function resolveDogName(body) {
 /* Map DB status (UPPERCASE) ↔ API status (lowercase) */
 const toApi = s => (s || '').toLowerCase();
 const toDB  = s => (s || '').toUpperCase();
+
+/* ─────────────────────────────────────────────────────────────
+   GET /api/dogs/search
+   Search and filter dogs with pagination
+   Query params: keyword, breed, color, training_status, availability, limit, offset
+   ───────────────────────────────────────────────────────────── */
+router.get('/search', async (req, res) => {
+  try {
+    const {
+      keyword,
+      breed,
+      color,
+      training_status,
+      availability,
+      limit = 10,
+      offset = 0,
+    } = req.query;
+
+    // Validate pagination parameters
+    const limitNum = parseInt(limit);
+    const offsetNum = parseInt(offset);
+
+    if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: 'Limit must be a number between 1 and 100',
+      });
+    }
+
+    if (isNaN(offsetNum) || offsetNum < 0) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: 'Offset must be a non-negative number',
+      });
+    }
+
+    // Validate enum values if provided
+    const validValues = dogService.getValidValues();
+
+    // Build search filters object
+    const filters = {
+      keyword: keyword || undefined,
+      breed: breed || undefined,
+      color: color || undefined,
+      training_status: training_status || undefined,
+      availability: availability || undefined,
+    };
+
+    // Call service to perform search
+    const result = await dogService.searchDogs(filters, limitNum, offsetNum);
+
+    // Return standardized response
+    return res.status(200).json({
+      success: true,
+      data: {
+        dogs: result.dogs.map(normalise),
+        pagination: {
+          total: result.total,
+          limit: result.limit,
+          offset: result.offset,
+          hasMore: result.hasMore,
+        },
+      },
+      message: 'Search completed successfully',
+    });
+  } catch (err) {
+    console.error('Search route error:', err);
+    return res.status(500).json({
+      success: false,
+      data: null,
+      message: 'Database query failed',
+    });
+  }
+});
 
 /* GET /api/dogs */
 router.get('/', async (req, res) => {
@@ -137,14 +214,44 @@ router.put('/:id', requireRole('STAFF', 'ADMIN'), uploadImage, async (req, res) 
   }
 });
 
-/* DELETE /api/dogs/:id  (ADMIN only) */
-router.delete('/:id', requireRole('ADMIN'), async (req, res) => {
+/* DELETE /api/dogs/:id  (STAFF / ADMIN only) */
+router.delete('/:id', requireRole('STAFF', 'ADMIN'), async (req, res) => {
+  let conn;
   try {
-    await db.execute('DELETE FROM dogs WHERE DogId = ?', [req.params.id]);
+    conn = await db.getConnection();
+    await conn.beginTransaction();
+
+    const dogId = req.params.id;
+
+    // Get adoption requests for this dog
+    const [reqs] = await conn.execute('SELECT AdoptionReqNo FROM adoption_requests WHERE DogId = ?', [dogId]);
+    const reqIds = reqs.map(r => r.AdoptionReqNo);
+
+    if (reqIds.length > 0) {
+      const placeholders = reqIds.map(() => '?').join(',');
+      
+      // Delete monthly_followups
+      await conn.execute(`DELETE FROM monthly_followups WHERE AdoptionReqNo IN (${placeholders})`, reqIds);
+      
+      // Delete delivery_schedules
+      await conn.execute(`DELETE FROM delivery_schedules WHERE AdoptionReqNo IN (${placeholders})`, reqIds);
+      
+      // Delete adoption_request_details (though it has ON DELETE CASCADE, let's be safe or just let it cascade when adoption_requests is deleted)
+      // Delete adoption_requests
+      await conn.execute(`DELETE FROM adoption_requests WHERE DogId = ?`, [dogId]);
+    }
+
+    // Delete the dog (favorites table has ON DELETE CASCADE so it will be handled automatically)
+    await conn.execute('DELETE FROM dogs WHERE DogId = ?', [dogId]);
+
+    await conn.commit();
     res.json({ message: 'ลบสุนัขสำเร็จ' });
   } catch (err) {
+    if (conn) await conn.rollback();
     console.error(err);
-    res.status(500).json({ message: 'เกิดข้อผิดพลาด' });
+    res.status(500).json({ message: 'เกิดข้อผิดพลาดในการลบสุนัข' });
+  } finally {
+    if (conn) conn.release();
   }
 });
 

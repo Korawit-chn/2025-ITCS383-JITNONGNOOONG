@@ -113,6 +113,15 @@ CREATE TABLE citizen_records (
     birth_date DATE
 );
 
+CREATE TABLE notifications (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    message TEXT NOT NULL,
+    type ENUM('approved', 'rejected', 'reminder') NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE INDEX idx_dog_status ON dogs(DogStatus);
 CREATE INDEX idx_adoption_status ON adoption_requests(ReqStatus);
 CREATE INDEX idx_user_role ON users(UserRole);
@@ -193,3 +202,4 @@ INSERT INTO citizen_records(citizen_id, full_name, birth_date) VALUES
 ('1103706677889','ปวีณา ทองดี','1998-07-19'),
 ('1103707788990','เอกชัย รุ่งเรือง','1987-11-03'),
 ('1103708899001','มาลี บุญมาก','1983-09-22');
+
