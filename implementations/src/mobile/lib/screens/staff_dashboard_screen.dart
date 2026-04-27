@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+
+class StaffDashboardScreen extends StatelessWidget {
+  const StaffDashboardScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('แดชบอร์ดเจ้าหน้าที่'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => authProvider.logout(),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'สวัสดี ${user?['firstName'] ?? ''} ${user?['lastName'] ?? ''}',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            const Text('เมนูหลัก', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                children: [
+                  _buildMenuCard(
+                    context,
+                    'คำขอรับเลี้ยง',
+                    Icons.assignment,
+                    () => Navigator.pushNamed(context, '/staff-adoption-req'),
+                  ),
+                  _buildMenuCard(
+                    context,
+                    'นัดหมาย',
+                    Icons.calendar_today,
+                    () => Navigator.pushNamed(context, '/staff-appointments'),
+                  ),
+                  _buildMenuCard(
+                    context,
+                    'ตรวจสุขภาพ',
+                    Icons.medical_services,
+                    () => Navigator.pushNamed(context, '/staff-checkups'),
+                  ),
+                  _buildMenuCard(
+                    context,
+                    'จัดการสุนัข',
+                    Icons.pets,
+                    () => Navigator.pushNamed(context, '/staff-dogmanagement'),
+                  ),
+                  _buildMenuCard(
+                    context,
+                    'ตรวจสอบ',
+                    Icons.verified,
+                    () => Navigator.pushNamed(context, '/staff-verify'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    return Card(
+      elevation: 4,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 48, color: Colors.blue),
+              const SizedBox(height: 8),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
