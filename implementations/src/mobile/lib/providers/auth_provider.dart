@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../config.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _token;
@@ -13,7 +14,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/auth/login'),
+      Uri.parse('${Config.apiBase}/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email, 'password': password}),
     );
@@ -35,7 +36,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> register(Map<String, dynamic> userData) async {
     final response = await http.post(
-      Uri.parse('http://localhost:3000/api/auth/register'),
+      Uri.parse('${Config.apiBase}/auth/register'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(userData),
     );

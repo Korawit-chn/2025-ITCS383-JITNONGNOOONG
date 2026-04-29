@@ -8,6 +8,7 @@ import 'screens/admin_dashboard_screen.dart';
 import 'screens/sponsor_dashboard_screen.dart';
 import 'providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(
@@ -44,7 +45,7 @@ class _MyAppState extends State<MyApp> {
       title: 'JITNONGNOONG',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        fontFamily: 'Sarabun',
+        textTheme: GoogleFonts.sarabunTextTheme(),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,

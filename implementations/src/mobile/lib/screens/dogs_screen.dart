@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../config.dart';
 
 class DogsScreen extends StatefulWidget {
   const DogsScreen({super.key});
@@ -31,7 +32,7 @@ class _DogsScreenState extends State<DogsScreen> {
         if (_selectedBreed.isNotEmpty) 'breed': _selectedBreed,
       };
 
-      final uri = Uri.parse('http://localhost:3000/api/dogs').replace(
+      final uri = Uri.parse('${Config.apiBase}/dogs').replace(
         queryParameters: queryParams,
       );
 
@@ -52,7 +53,7 @@ class _DogsScreenState extends State<DogsScreen> {
 
   Future<void> _fetchBreeds() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/api/dogs/breeds'));
+      final response = await http.get(Uri.parse('${Config.apiBase}/dogs/breeds'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -156,7 +157,7 @@ class _DogsScreenState extends State<DogsScreen> {
             color: Colors.grey.shade200,
             child: dog['imageUrl'] != null
                 ? Image.network(
-                    'http://localhost:3000${dog['imageUrl']}',
+                    '${Config.baseUrl}${dog['imageUrl']}',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
                         const Center(child: Icon(Icons.pets, size: 48)),
