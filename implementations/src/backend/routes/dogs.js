@@ -73,9 +73,6 @@ router.get('/search', async (req, res) => {
       });
     }
 
-    // Validate enum values if provided
-    const validValues = dogService.getValidValues();
-
     // Build search filters object
     const filters = {
       keyword: keyword || undefined,

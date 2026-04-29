@@ -36,7 +36,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _tryAutoLogin() async {
-    await Provider.of<AuthProvider>(context, listen: false).tryAutoLogin();
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.tryAutoLogin();
   }
 
   @override
@@ -73,14 +74,15 @@ class _MyAppState extends State<MyApp> {
   }
 
   Widget _getDashboardForRole(String? role) {
-    switch (role?.toUpperCase()) {
-      case 'ADMIN':
+    final normalizedRole = role?.toLowerCase() ?? '';
+    switch (normalizedRole) {
+      case 'admin':
         return const AdminDashboardScreen();
-      case 'STAFF':
+      case 'staff':
         return const StaffDashboardScreen();
-      case 'SPONSOR':
+      case 'sponsor':
         return const SponsorDashboardScreen();
-      case 'USER':
+      case 'user':
       default:
         return const UserDashboardScreen();
     }

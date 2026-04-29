@@ -234,12 +234,30 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         _loginEmailController.text,
         _loginPasswordController.text,
       );
-      Navigator.of(context).pushReplacementNamed('/');
+      
+      // Navigate to appropriate dashboard based on role
+      String route = '/';
+      final role = authProvider.user?['role']?.toString().toLowerCase();
+      switch (role) {
+        case 'admin':
+          route = '/admin-dashboard';
+          break;
+        case 'staff':
+          route = '/staff-dashboard';
+          break;
+        case 'sponsor':
+          route = '/sponsor-dashboard';
+          break;
+        case 'user':
+        default:
+          route = '/user-dashboard';
+          break;
+      }
+      Navigator.of(context).pushReplacementNamed(route);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('เข้าสู่ระบบล้มเหลว: $e')),
       );
-    } finally {
       setState(() => _isLoading = false);
     }
   }
