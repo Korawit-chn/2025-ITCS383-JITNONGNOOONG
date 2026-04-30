@@ -120,6 +120,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 ? const CircularProgressIndicator()
                 : const Text('เข้าสู่ระบบ'),
           ),
+          const SizedBox(height: 12),
+          OutlinedButton(
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),
+            child: const Text('กลับสู่หน้าหลัก'),
+          ),
           const SizedBox(height: 16),
           const Text(
             'บัญชีทดสอบ: admin@gmail.com, malee.staff@gmail.com, thanakrit@gmail.com, sponsor1@gmail.com / Password123!',
@@ -218,6 +223,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             child: _isLoading
                 ? const CircularProgressIndicator()
                 : const Text('สมัครสมาชิก'),
+          ),
+          const SizedBox(height: 12),
+          OutlinedButton(
+            onPressed: () => Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false),
+            child: const Text('กลับสู่หน้าหลัก'),
           ),
         ],
       ),

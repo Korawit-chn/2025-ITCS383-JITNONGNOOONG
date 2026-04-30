@@ -79,8 +79,8 @@ class _UserPickupScreenState extends State<UserPickupScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _appointments.isEmpty
-                ? const ListView(
-                    children: [
+                ? ListView(
+                    children: const [
                       SizedBox(height: 120),
                       Center(child: Text('ยังไม่มีนัดหมายสำหรับคุณ')),
                     ],
@@ -102,9 +102,12 @@ class _UserPickupScreenState extends State<UserPickupScreen> {
                               Text('พนักงานยืนยัน: ${appointment['staffConfirmed'] == true ? 'ยืนยันแล้ว' : 'รอการยืนยัน'}'),
                             ],
                           ),
-                          trailing: ElevatedButton(
-                            onPressed: () => _selectDate(appointment['adoptionId'].toString()),
-                            child: const Text('เลือกวัน'),
+                          trailing: SizedBox(
+                            width: 100,
+                            child: ElevatedButton(
+                              onPressed: () => _selectDate(appointment['adoptionId'].toString()),
+                              child: const Text('เลือกวัน'),
+                            ),
                           ),
                         ),
                       );

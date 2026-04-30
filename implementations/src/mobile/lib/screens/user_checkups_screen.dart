@@ -47,8 +47,8 @@ class _UserCheckupsScreenState extends State<UserCheckupsScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _checkups.isEmpty
-                ? const ListView(
-                    children: [
+                ? ListView(
+                    children: const [
                       SizedBox(height: 120),
                       Center(child: Text('ยังไม่มีข้อมูลติดตาม')),
                     ],

@@ -5,6 +5,11 @@ import '../providers/auth_provider.dart';
 class UserDashboardScreen extends StatelessWidget {
   const UserDashboardScreen({super.key});
 
+  Future<void> _handleLogout(BuildContext context, AuthProvider authProvider) async {
+    await authProvider.logout();
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -15,8 +20,12 @@ class UserDashboardScreen extends StatelessWidget {
         title: const Text('แดชบอร์ดผู้ใช้'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.pushNamed(context, '/notifications'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => authProvider.logout(),
+            onPressed: () => _handleLogout(context, authProvider),
           ),
         ],
       ),
@@ -38,6 +47,12 @@ class UserDashboardScreen extends StatelessWidget {
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
                 children: [
+                  _buildMenuCard(
+                    context,
+                    'ดูสุนัข',
+                    Icons.pets,
+                    () => Navigator.pushNamed(context, '/dogs'),
+                  ),
                   _buildMenuCard(
                     context,
                     'คำขอรับเลี้ยง',

@@ -69,8 +69,8 @@ class _UserFavouritesScreenState extends State<UserFavouritesScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _favourites.isEmpty
-                ? const ListView(
-                    children: [
+                ? ListView(
+                    children: const [
                       SizedBox(height: 120),
                       Center(child: Text('ยังไม่มีสุนัขที่ชอบ')), 
                     ],

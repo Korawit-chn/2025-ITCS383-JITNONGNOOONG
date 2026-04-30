@@ -47,8 +47,8 @@ class _UserRequestsScreenState extends State<UserRequestsScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _requests.isEmpty
-                ? const ListView(
-                    children: [
+                ? ListView(
+                    children: const [
                       SizedBox(height: 120),
                       Center(child: Text('ยังไม่มีคำขอรับเลี้ยง')), 
                     ],

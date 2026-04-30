@@ -5,6 +5,11 @@ import '../providers/auth_provider.dart';
 class StaffDashboardScreen extends StatelessWidget {
   const StaffDashboardScreen({super.key});
 
+  Future<void> _handleLogout(BuildContext context, AuthProvider authProvider) async {
+    await authProvider.logout();
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -15,16 +20,21 @@ class StaffDashboardScreen extends StatelessWidget {
         title: const Text('แดชบอร์ดเจ้าหน้าที่'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.pushNamed(context, '/notifications'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => authProvider.logout(),
+            onPressed: () => _handleLogout(context, authProvider),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Text(
               'สวัสดี ${user?['firstName'] ?? ''} ${user?['lastName'] ?? ''}',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -52,7 +62,7 @@ class StaffDashboardScreen extends StatelessWidget {
                   ),
                   _buildMenuCard(
                     context,
-                    'ตรวจสุขภาพ',
+                    'ติดตามหลังรับเลี้ยง',
                     Icons.medical_services,
                     () => Navigator.pushNamed(context, '/staff-checkups'),
                   ),
@@ -74,7 +84,7 @@ class StaffDashboardScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, VoidCallback onTap) {

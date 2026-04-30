@@ -382,7 +382,7 @@ class _DogsScreenState extends State<DogsScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   Color _getStatusColor(String? status) {

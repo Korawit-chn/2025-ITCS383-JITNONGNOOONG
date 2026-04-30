@@ -178,19 +178,20 @@ class _StaffDogManagementScreenState extends State<StaffDogManagementScreen> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: _loadDogs,
-        child: _isLoading
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _loadDogs,
+          child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _dogs.isEmpty
-                ? const ListView(
-                    children: [
+                ? ListView(
+                    children: const [
                       SizedBox(height: 120),
                       Center(child: Text('ยังไม่มีสุนัขในระบบ')),
                     ],
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
                     itemCount: _dogs.length,
                     itemBuilder: (context, index) {
                       final dog = _dogs[index];
@@ -217,6 +218,6 @@ class _StaffDogManagementScreenState extends State<StaffDogManagementScreen> {
                     },
                   ),
       ),
-    );
+    ));
   }
 }

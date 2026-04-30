@@ -36,6 +36,40 @@ class _StaffAdoptionReqScreenState extends State<StaffAdoptionReqScreen> {
     }
   }
 
+  String _normalizeStatus(dynamic value) {
+    return value?.toString().toLowerCase().trim() ?? '';
+  }
+
+  bool _canValidate(dynamic request) {
+    final status = _normalizeStatus(request['status']);
+    final verification = _normalizeStatus(request['verification_status']);
+    return status == 'pending' && verification == 'pending';
+  }
+
+  bool _canApprove(dynamic request) {
+    final status = _normalizeStatus(request['status']);
+    final verification = _normalizeStatus(request['verification_status']);
+    return status == 'pending' && verification == 'passed';
+  }
+
+  bool _canReject(dynamic request) {
+    final status = _normalizeStatus(request['status']);
+    return status == 'pending';
+  }
+
+  String _translateVerificationStatus(String? status) {
+    switch (status?.toString().toLowerCase().trim()) {
+      case 'passed':
+        return 'ผ่าน';
+      case 'failed':
+        return 'ไม่ผ่าน';
+      case 'pending':
+        return 'รอตรวจสอบ';
+      default:
+        return '-';
+    }
+  }
+
   Future<void> _reviewRequest(dynamic request, String action) async {
     final rejectionReasonController = TextEditingController();
     String? rejectionReason;
@@ -80,61 +114,114 @@ class _StaffAdoptionReqScreenState extends State<StaffAdoptionReqScreen> {
     }
   }
 
+  Future<void> _validateRequest(dynamic request) async {
+    try {
+      final response = await ApiService.post('/verify/all', body: {
+        'citizen_id': request['citizen_id'],
+        'adoption_id': request['id'],
+      });
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final message = data['passed'] == true
+            ? 'การตรวจสอบผ่านแล้ว'
+            : 'การตรวจสอบไม่ผ่าน — กรุณาตรวจสอบข้อมูล';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+        await _loadRequests();
+      } else {
+        throw Exception(data['message'] ?? 'ไม่สามารถตรวจสอบได้');
+      }
+    } catch (e) {
+      debugPrint('Validate request error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('ไม่สามารถตรวจสอบได้: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('จัดการคำขอรับเลี้ยง')),
-      body: RefreshIndicator(
-        onRefresh: _loadRequests,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _requests.isEmpty
-                ? const ListView(
-                    children: [
-                      SizedBox(height: 120),
-                      Center(child: Text('ไม่มีคำขอให้พิจารณา')),
-                    ],
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _requests.length,
-                    itemBuilder: (context, index) {
-                      final request = _requests[index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          title: Text(request['dogName'] ?? 'สุนัขไม่ระบุชื่อ'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('ผู้ขอ: ${request['firstName'] ?? ''} ${request['lastName'] ?? ''}'),
-                              Text('สถานะตรวจสอบ: ${request['verification_status'] ?? '-'}'),
-                              Text('สถานะคำขอ: ${request['status'] ?? '-'}'),
-                              if (request['address'] != null) Text('ที่อยู่: ${request['address']}'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _loadRequests,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _requests.isEmpty
+                        ? ListView(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                            children: const [
+                              SizedBox(height: 120),
+                              Center(child: Text('ไม่มีคำขอให้พิจารณา')),
                             ],
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                            itemCount: _requests.length,
+                            itemBuilder: (context, index) {
+                              final request = _requests[index];
+                              final status = _normalizeStatus(request['status']);
+                              final verification = _normalizeStatus(request['verification_status']);
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        request['dogName'] ?? 'สุนัขไม่ระบุชื่อ',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text('ผู้ขอ: ${request['firstName'] ?? ''} ${request['lastName'] ?? ''}'),
+                                      Text('สถานะตรวจสอบ: ${_translateVerificationStatus(request['verification_status'])}'),
+                                      Text('สถานะคำขอ: ${request['status'] ?? '-'}'),
+                                      if (status == 'pending' && verification == 'pending')
+                                        const Text(
+                                          'รอการตรวจสอบคุณสมบัติ',
+                                          style: TextStyle(color: Colors.blue),
+                                        ),
+                                      if (request['address'] != null) Text('ที่อยู่: ${request['address']}'),
+                                      const SizedBox(height: 12),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          if (_canValidate(request))
+                                            ElevatedButton(
+                                              onPressed: () => _validateRequest(request),
+                                              child: const Text('ตรวจสอบ'),
+                                            ),
+                                          if (_canApprove(request))
+                                            ElevatedButton(
+                                              onPressed: () => _reviewRequest(request, 'approve'),
+                                              child: const Text('อนุมัติ'),
+                                            ),
+                                          if ((_canValidate(request) || _canApprove(request)) && _canReject(request))
+                                            const SizedBox(width: 8),
+                                          if (_canReject(request))
+                                            ElevatedButton(
+                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                                              onPressed: () => _reviewRequest(request, 'reject'),
+                                              child: const Text('ปฏิเสธ'),
+                                            ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          isThreeLine: true,
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.check_circle, color: Colors.green),
-                                onPressed: request['status'] == 'pending'
-                                    ? () => _reviewRequest(request, 'approve')
-                                    : null,
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.cancel, color: Colors.red),
-                                onPressed: request['status'] == 'pending'
-                                    ? () => _reviewRequest(request, 'reject')
-                                    : null,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

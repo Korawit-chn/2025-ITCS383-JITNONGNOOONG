@@ -91,7 +91,7 @@ class _MyAppState extends State<MyApp> {
         '/staff-dogmanagement': (context) => const StaffDogManagementScreen(),
         '/staff-verify': (context) => const StaffVerifyScreen(),
         '/admin-dashboard': (context) => const AdminDashboardScreen(),
-        '/admin-reports': (context) => const AdminReportsScreen(),
+        '/admin-reports': (context) => const AdminDashboardScreen(),
         '/sponsor-dashboard': (context) => const SponsorDashboardScreen(),
       },
     );

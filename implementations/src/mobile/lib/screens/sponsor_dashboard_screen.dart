@@ -118,8 +118,15 @@ class _SponsorDashboardScreenState extends State<SponsorDashboardScreen> {
         title: const Text('แดชบอร์ดผู้สนับสนุน'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () => Navigator.pushNamed(context, '/notifications'),
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => authProvider.logout(),
+            onPressed: () async {
+              await authProvider.logout();
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
           ),
         ],
       ),

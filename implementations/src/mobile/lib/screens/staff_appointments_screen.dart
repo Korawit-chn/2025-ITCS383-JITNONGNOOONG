@@ -76,53 +76,68 @@ class _StaffAppointmentsScreenState extends State<StaffAppointmentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('นัดหมายรับสุนัข')),
-      body: RefreshIndicator(
-        onRefresh: _loadAppointments,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _appointments.isEmpty
-                ? const ListView(
-                    children: [
-                      SizedBox(height: 120),
-                      Center(child: Text('ไม่มีนัดหมายในระบบ')),
-                    ],
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _appointments.length,
-                    itemBuilder: (context, index) {
-                      final appt = _appointments[index];
-                      return Card(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        child: ListTile(
-                          title: Text(appt['dogName'] ?? 'ไม่พบชื่อสุนัข'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('ลูกค้า: ${appt['firstName'] ?? ''} ${appt['lastName'] ?? ''}'),
-                              Text('วันที่: ${appt['deliveryDate'] ?? 'ยังไม่กำหนด'}'),
-                              Text('สถานะ: ${appt['status'] ?? '-'}'),
-                              Text('ยืนยันโดยเจ้าหน้าที่: ${appt['staffConfirmed'] == true ? 'ใช่' : 'รอ'}'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _loadAppointments,
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _appointments.isEmpty
+                        ? ListView(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                            children: const [
+                              SizedBox(height: 120),
+                              Center(child: Text('ไม่มีนัดหมายในระบบ')),
                             ],
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                            itemCount: _appointments.length,
+                            itemBuilder: (context, index) {
+                              final appt = _appointments[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        appt['dogName'] ?? 'ไม่พบชื่อสุนัข',
+                                        style: Theme.of(context).textTheme.titleMedium,
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text('ลูกค้า: ${appt['firstName'] ?? ''} ${appt['lastName'] ?? ''}'),
+                                      Text('วันที่: ${appt['deliveryDate'] ?? 'ยังไม่กำหนด'}'),
+                                      Text('สถานะ: ${appt['status'] ?? '-'}'),
+                                      Text('ยืนยันโดยเจ้าหน้าที่: ${appt['staffConfirmed'] == true ? 'ใช่' : 'รอ'}'),
+                                      const SizedBox(height: 12),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton(
+                                            onPressed: appt['deliveryDate'] != null && appt['staffConfirmed'] != true ? () => _confirmDate(appt['id'].toString()) : null,
+                                            child: const Text('ยืนยันวันนัด'),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          ElevatedButton(
+                                            onPressed: appt['status'] != 'completed' ? () => _completeAppointment(appt['id'].toString()) : null,
+                                            child: const Text('เสร็จสิ้น'),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: appt['deliveryDate'] != null ? () => _confirmDate(appt['id'].toString()) : null,
-                                child: const Text('ยืนยันวันนัด'),
-                              ),
-                              const SizedBox(height: 8),
-                              ElevatedButton(
-                                onPressed: appt['status'] != 'completed' ? () => _completeAppointment(appt['id'].toString()) : null,
-                                child: const Text('เสร็จสิ้น'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
