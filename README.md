@@ -22,6 +22,7 @@ cd implementations/src/mobile
 ```
 
 Please change URL to backend URL in "config.dart" in "/implementations/src/mobile/lib"
+You can use our cloud server url "https://dog-adoption-backend-aj3k.onrender.com"
 
 # Recommend using adriod studio emulator
 

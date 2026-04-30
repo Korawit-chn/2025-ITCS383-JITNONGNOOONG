@@ -43,6 +43,10 @@ Existing system: Dog Adoption Platform (Node.js + Express + MySQL + Vanilla JS)
 * User account can mark favorite on the dog info page.
 * The adoption flow must match the web application.
 
+# Task 4: Notification system
+* Use the same notifiation system in web application but change to dart language for mobile app
+* Check 'backend' and 'frontend' folder for reading the code to make the system
+
 ---
 
 # Refactoring (from SonarQube report)

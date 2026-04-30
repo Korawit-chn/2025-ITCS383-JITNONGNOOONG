@@ -7,11 +7,13 @@ This is a Dog Adoption system using:
 * Backend: Node.js (Express)
 * Database: MySQL
 * Frontend: Vanilla JavaScript (HTML/CSS)
+* Mobile: Flutter (dart)
 
 ---
 
 ## Architecture Rules
 
+* Everything must do in 'implementations/src/mobile'
 * Follow REST API design
 * Separate layers:
 
@@ -46,19 +48,10 @@ This is a Dog Adoption system using:
 
 ## Feature Implementation Rules
 
-### Search Engine
-
-* Build dynamic SQL query based on filters
-* Use LIKE for keyword search
-* Escape special characters safely
-* Do not fetch all data then filter in JS (must filter in SQL)
-
-### Notification System
-
-* Use event-based logic (trigger on approve/reject)
-* Store all notifications in database
-* Ensure notifications belong to correct user
-* Support unread/read state
+### Mobile application
+* Making a mobile application with the exactly same feature as frontend web applicaiton 'implementations/src/frontend'.
+* Only use existing API in backend folder 'implementations/src/backend' 
+* All feature/funciton in web application (frontend part) must exists and working correctly in mobile
 
 ---
 
@@ -67,16 +60,6 @@ This is a Dog Adoption system using:
 * Avoid unnecessary DB calls
 * Use pagination if result is large
 * Keep API response time fast (<300ms if possible)
-
----
-
-## Testing Rules
-
-* Write unit tests for:
-
-  * Search API
-  * Notification logic
-* Cover edge cases
 
 ---
 
@@ -90,6 +73,6 @@ This is a Dog Adoption system using:
 
 ## What NOT to do
 
-* Do not rewrite entire system
 * Do not change existing working features
 * Do not break RBAC (role-based access control)
+* Do not modify anything else that not inside 'mobile' folder

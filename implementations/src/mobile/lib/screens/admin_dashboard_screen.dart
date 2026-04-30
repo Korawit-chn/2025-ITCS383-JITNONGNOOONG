@@ -54,7 +54,7 @@ class AdminDashboardScreen extends StatelessWidget {
                     context,
                     'รายงาน',
                     Icons.analytics,
-                    () {},
+                    () => Navigator.pushNamed(context, '/admin-reports'),
                   ),
                   _buildMenuCard(
                     context,

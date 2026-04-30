@@ -320,9 +320,11 @@ class _DogsScreenState extends State<DogsScreen> {
   Widget _buildDogCard(dynamic dog) {
     return Card(
       elevation: 4,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: InkWell(
+        onTap: () => Navigator.pushNamed(context, '/dog-detail', arguments: dog['id']?.toString()),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Dog Image
           Container(
             height: 120,
