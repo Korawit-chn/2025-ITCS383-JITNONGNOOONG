@@ -20,10 +20,10 @@ Install flutter SDK "https://docs.flutter.dev/install/manual"
 
 ```bash
 # Navigate to mobile folder
-cd implementations/src/mobile
+cd mobile
 ```
 
-Please change URL to backend URL in "config.dart" in "/implementations/src/mobile/lib"
+Please change URL to backend URL in "config.dart" in "mobile/lib"
 You can use our cloud server url "https://dog-adoption-backend-aj3k.onrender.com"
 
 # Recommend using andriod studio emulator "https://developer.android.com/studio"
