@@ -10,7 +10,9 @@
 
 | Dependency | Version |
 |---|---|
-| Flutter| Any |
+| Flutter | Any |
+
+Install flutter SDK "https://docs.flutter.dev/install/manual"
 
 ---
 
@@ -24,7 +26,7 @@ cd implementations/src/mobile
 Please change URL to backend URL in "config.dart" in "/implementations/src/mobile/lib"
 You can use our cloud server url "https://dog-adoption-backend-aj3k.onrender.com"
 
-# Recommend using adriod studio emulator
+# Recommend using andriod studio emulator "https://developer.android.com/studio"
 
 ```bash
 # Install dependencies
